@@ -1,0 +1,442 @@
+@import url('https://fonts.googleapis.com/css2?family=Intel+One+Mono:ital,wght@0,300..700;1,300..700&display=swap');
+
+:root {
+    --black-color: #161515;
+    --secondary-black-color: #1d1818;
+    --purple-color: #48229b;
+    --secondary-purple-color: #2e1467;
+    --blue-color: #376dc4;
+    --secondary-blue-color: #044dc3;
+    --orange-color: #d69200;
+    --secondary-orange-color: #b57f09;
+    --white-color: #f3f3f3;
+    --secondary-white-color: #c8c7c7;
+    --grey-color: #8f8d8d;    
+    --secondary-grey-color: #5d5959;
+    --red-color: #fd2b0f;
+    --secondary-red-color: #a10c0c;
+    --green-color: #13ba10;
+    --secondary-green-color: #198617;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Intel One Mono", monospace;
+}
+
+*.hidden {
+    display: none;
+}
+
+body {
+    background-color: var(--black-color);
+    color: var(--white-color);
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    margin-bottom: 10px;
+}
+
+header {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    background-color: var(--secondary-black-color);
+    align-items: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+
+.start-game-btn, #go-home-btn {
+    font-size: 1.5rem;
+    transition: 0.5s;
+    border: none;
+    background-color: var(--red-color);
+    color: var(--white-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.start-game-btn.header {
+    font-size: 1rem;
+    padding: 1rem;
+}
+
+#game-configuration {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+}
+
+#game-status {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+#game-timer {
+    align-self: center;
+    transform: translateY(1px);
+}
+
+#game-status span.emote {
+    font-size: 1.5rem;
+}
+
+#game-difficulty-configuration {
+    transform: translateY(1px);
+    display: flex;
+}
+
+select {
+    font-size: 1.2rem;
+    color: var(--white-color);
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+option {
+    color: var(--black-color);
+}
+
+main {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3rem;
+    width: 80%;
+    margin-top: 2rem;
+}
+
+#start-game-area {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 2rem;
+    flex-flow: column wrap;
+}
+
+header.hidden, #start-game-area.hidden, #game-area.hidden, #result-game-area.hidden, #loading-screen.hidden, .player-result-area.hidden, #game-difficulty-configuration.hidden, #player-cheated-area.hidden  {
+    display: none;
+}
+
+#title-description-wrapper {
+    display: flex;
+    gap: 1rem;
+    flex-flow: column wrap;
+}
+
+#start-game-area p{
+    font-size: 1.5em;
+}
+
+h1 {
+    text-align: center;
+    font-size: 4em;
+    position: relative;
+    color: var(--white-color);
+}
+
+h1::after {
+    top: 100%;
+    right: 20%;
+    content: "";
+    position: absolute;
+    width: 90px;
+    height: 6px;
+    background-color: var(--red-color);
+    animation: flicker 1s ease-in-out infinite;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.1;
+    }
+}
+
+#game-area {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 2rem;
+}
+
+#words-list-area {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+#words {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    gap: 1rem;
+}
+
+.word {
+    position: relative;
+    transition: .5s;
+    padding-bottom: 2px;
+    transition: .5s;
+    border-bottom: 2px solid var(--red-color);
+    width: 200px;
+}
+
+#player-inputs-area {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 10px;
+    background-color: var(--purple-color);
+}
+
+.input {
+    display: flex;
+    background-color: var(--white-color);
+    align-items: center;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    margin-top: .5rem;
+    overflow: hidden;
+}
+
+.input p {
+    color: var(--grey-color);
+}
+
+.input input {
+    flex: 1;
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+#finish-game-btn {
+    background-color: var(--green-color);
+    font-size: 1.2rem;
+    color: var(--white-color);
+    border: none;
+    cursor: pointer;
+    padding: 1.5rem;
+    border-radius: 10px;
+    transition: .5s;
+}
+
+#finish-game-btn.disabled {
+    cursor: default;
+    background-color: var(--grey-color);
+}
+
+
+#result-game-area {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 2rem;
+    width: 80%;
+}
+
+#result-game-area  img {
+    align-self: center;
+    width: 50%;
+}
+
+.player-result-area-wrapper {
+    width: 80%;
+}
+
+.player-result-area {
+    align-self: center;
+    width: 100%;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-flow: column wrap;
+    gap: .5rem;
+    border-radius: 10px;
+    transition: .5s;
+}
+
+#player-cheated-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#loading-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    border: 10px solid var(--red-color);
+    border-top: 10px solid transparent;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: loading 1s linear infinite;
+}
+
+#definitions-area {
+    top: -100%;
+    width: 60%;
+    border-radius: 10px;
+    padding: 1rem;
+    position: absolute;
+    background-color: var(--secondary-grey-color);
+    transition: .5s;
+    pointer-events: none;
+}
+
+#definitions-area.show {
+    top: 20%;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+table, #fire-area {
+    width: 100%;
+}
+
+td {
+    width: 50px;
+    height: 50px;
+    border: 1px solid var(--white-color);
+    text-align: center;
+    vertical-align: center;
+}
+
+td.pixel {
+    width: 4px;
+    height: 4px;
+    border: none;
+}
+
+@keyframes loading {
+    from {
+        transform: rotate(0deg);
+    } 
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .start-game-btn.header span {
+        display: none;
+    }
+
+    .start-game-btn.header i {
+        font-size: 2rem;
+    }
+
+  
+}
+
+@media screen and (max-width: 500px) {
+    .word {
+        width: auto;
+    }
+
+    #result-game-area {
+        display: flex;
+        flex-flow: column wrap;
+        gap: 2rem;
+        width: 80%;
+    }
+
+    #result-game-area  img {
+        align-self: center;
+        width: 70%;
+    }
+
+    .player-result-area-wrapper {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .player-result-area-wrapper h2{
+        font-size: 2rem;
+    }
+
+    #timer-countdown-span {
+        display: block;
+    }
+
+
+    .start-game-btn.header, #go-home-btn {
+        position: absolute;
+        top: 110%;
+    }
+
+    #go-home-btn {
+        position: absolute;
+        padding: .7rem;
+        right: 10%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .player-result-area-wrapper h2{
+        font-size: 1.5rem;
+    }
+
+    #definitions-area {
+        width: 70%;
+    }
+}
+
+
+@media (hover: hover) {
+    .start-game-btn:hover, #go-home-btn:hover {
+        background-color: var(--secondary-red-color);
+    }
+
+    #finish-game-btn:hover {
+        background-color: var(--secondary-green-color);
+    }
+
+    #finish-game-btn.disabled:hover {
+        background-color: var(--grey-color);
+    }
+
+    #player-won-result-area:hover {
+        background-color: var(--secondary-green-color);
+    }
+
+    #player-lost-result-area:hover {
+        background-color: var(--secondary-red-color);
+    }
+
+    .word:hover {
+        border-bottom: 2px solid var(--secondary-red-color);
+    }
+}

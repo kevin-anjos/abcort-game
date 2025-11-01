@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <script type="module" src="js/events.js" defer></script>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <title>ABCort Game</title>
+</head>
+<body>
+
+    <header>
+        <button class="start-game-btn header">
+            <i class="bi bi-play-fill"></i>
+            <span>Start the game</span>
+        </button>
+        <button id="go-home-btn" class="hidden">
+            <i class="bi bi-house-door-fill"></i>
+        </button>
+        <div id="game-configuration">
+            <div id="game-status">
+                <div id="player-wins">
+                    <p>
+                        <span class="emote">🏆</span><span id="player-wins-span"></span>
+                    </p>
+                </div>
+                <div id="player-defeats">
+                    <p>
+                        <span class="emote">🤕</span><span id="player-defeats-span"></span>
+                    </p>
+                </div>
+            </div>
+            <div id="game-timer" class="hidden">
+                <p>Time left: <span id="timer-countdown-span"></span></p>
+            </div>
+            <div id="game-difficulty-configuration">
+                <select id="game-difficulty-select">
+                    <option value="easy-mode">Easy</option>
+                    <option value="medium-mode" selected>Medium&nbsp;&nbsp;</option>
+                    <option value="hard-mode">Hard</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="start-game-area">
+            <div id="title-description-wrapper">
+                <h1>ABCort</h1>
+                <p>Arrange the words alphabetically.</p>
+            </div>
+            <button class="start-game-btn">
+                <i class="bi bi-play-fill"></i> 
+                Start the game
+            </button>
+        </div>
+
+        <div id="game-area" class="hidden">
+            <div id="words-list-area">
+                <h2>Words List:</h2>
+                <div id="words"></div>
+            </div>
+            <div id="player-inputs-area">
+                <h2>Sort it:</h2>
+                <div id="player-inputs-wrapper"></div>
+            </div>
+            <button id="finish-game-btn" class="disabled">Finish game</button>
+        </div>
+
+        <div id="result-game-area" class="hidden">
+            <div id="player-won-result-area-wrapper" class="player-result-area-wrapper">
+                <h2>Congratulations!</h2>
+                <div id="player-won-result-area" class="player-result-area">
+                    <img src="images/player-won-gif.webp" alt="">
+                </div>
+            </div>
+            <div id="player-lost-result-area-wrapper" class="player-result-area-wrapper">
+                <h2>Game over!</h2>
+                <div id="player-lost-result-area" class="player-result-area">
+                    <img src="images/player-defeat-gif.webp" alt="">
+                </div>
+            </div>
+            <button class="start-game-btn">
+                <i class="bi bi-arrow-clockwise"></i>
+                Restart the game
+            </button>
+        </div>
+
+        <div id="player-cheated-area" class="hidden">
+            <h2>So you tried to cheat...</h2>
+            <button class="start-game-btn">
+                <i class="bi bi-arrow-clockwise"></i>
+                Restart the game
+            </button>
+        </div>
+
+        <div id="loading-screen" class="hidden"></div>
+    </main>
+    
+    <div id="definitions-area"></div>
+
+    <footer>
+        <div id="fire-area"></div>
+    </footer>
+</body>
+</html>
