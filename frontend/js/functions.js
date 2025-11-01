@@ -117,7 +117,7 @@ const finishGame = async ({ defeatByTimeout }) => {
     if (cheated) {
         render.showGameAreaHandler("player-cheated-area");
     } else {
-        
+
         if (defeatByTimeout || !playerResult.won) {
             render.showGameResultArea({ defeat: true });
         } 
@@ -136,7 +136,7 @@ const finishGame = async ({ defeatByTimeout }) => {
     finishGameButtonState.disabled = true;
 
     console.log(currentPlayerStatus);
-
+    
     render.printPlayerStatus(currentPlayerStatus);
 
     render.handleDisabledButtonClass(finishGameButtonState.disabled);

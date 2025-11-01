@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:7000'
+const SERVER_URL = 'https://abcort.onrender.com';
 
 const getWordsList = async gameDifficulty => {
     try {
