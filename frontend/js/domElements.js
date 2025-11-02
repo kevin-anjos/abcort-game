@@ -15,6 +15,8 @@ const startGameArea = document.querySelector('#start-game-area');
 const gameArea = document.querySelector('#game-area');
 const resultGameArea = document.querySelector('#result-game-area');
 const playerCheatedArea = document.querySelector('#player-cheated-area');
+
+const connectionFailedModal = document.querySelector('#connection-failed-modal');
 const loadingScreen = document.querySelector('#loading-screen');
 
 const playerWinsSpan = document.querySelector('#player-wins-span');
@@ -30,6 +32,18 @@ const wordDefinitionArea = document.querySelector('#definitions-area');
 
 const footer = document.querySelector('footer');
 
+const fireSound = document.querySelector('#fire-sound');
+const countdownSound = document.querySelector('#countdown-sound');
+const buttonSound = document.querySelector('#button-sound');
+const winSound = document.querySelector('#win-sound');
+const defeatSound = document.querySelector('#defeat-sound');
+const loserSound = document.querySelector('#loser-sound');
+
+const playAudioBtn = document.querySelector('#play-audio-btn');
+const pauseAudioBtn = document.querySelector('#pause-audio-btn');
+
+const buttons = document.querySelectorAll('button');
+
 export {
-    wordsListArea, finishGameBtn, startGameBtns, playerInputsWrapper, playerResultAreas, startGameArea, gameArea, resultGameArea, loadingScreen, playerDefeatsSpan, playerWinsSpan, gameTimer, timerCountdownSpan, goHomeBtn, gameDifficultyConfiguration, gameDifficultySelect, header, footer, wordDefinitionArea, playerCheatedArea
+    wordsListArea, finishGameBtn, startGameBtns, playerInputsWrapper, playerResultAreas, startGameArea, gameArea, resultGameArea, loadingScreen, playerDefeatsSpan, playerWinsSpan, gameTimer, timerCountdownSpan, goHomeBtn, gameDifficultyConfiguration, gameDifficultySelect, header, footer, wordDefinitionArea, playerCheatedArea, connectionFailedModal, fireSound, countdownSound, buttonSound, playAudioBtn, pauseAudioBtn, buttons, winSound, defeatSound, loserSound
 }

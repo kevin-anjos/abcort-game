@@ -42,6 +42,10 @@
                     <option value="hard-mode">Hard</option>
                 </select>
             </div>
+            <div id="play-audio-handler">
+                <i class="bi bi-volume-mute-fill" id="play-audio-btn"></i>
+                <i class="bi bi-volume-up-fill hidden" id="pause-audio-btn"></i>
+            </div>
         </div>
     </header>
 
@@ -100,6 +104,32 @@
     </main>
     
     <div id="definitions-area"></div>
+
+    <div id="connection-failed-modal">
+        <h2>Connection failed!</h2>
+        <p>Try to play the game in a few minutes.</p>
+    </div>
+
+    <div id="audio-area">
+        <audio id="fire-sound" loop>
+            <source src="audio/fire.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="countdown-sound" loop>
+            <source src="audio/countdown.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="loser-sound" loop>
+            <source src="audio/loser.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="button-sound" controls>
+            <source src="audio/button.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="win-sound" controls>
+            <source src="audio/win.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="defeat-sound" controls>
+            <source src="audio/defeat.mp3" type="audio/mpeg">
+        </audio>
+    </div>
 
     <footer>
         <div id="fire-area"></div>

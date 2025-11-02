@@ -186,10 +186,44 @@ const showDefinition = definition => {
     domElements.wordDefinitionArea.classList.add('show');
 }
 
+const markCorrectWords = wordsPositions => {
+    const words = document.querySelectorAll('.word');
+    words.forEach(word => word.classList.remove('marked'));
+
+    if (wordsPositions.length === 0) return;
+
+    wordsPositions.forEach(position => {
+        words[position].classList.add('marked');
+    });
+};
+
 const hideDefinition = () => {
     domElements.wordDefinitionArea.classList.remove('show');
 };
 
+const showConnectionFailedModal = () => {
+    domElements.connectionFailedModal.classList.add('show');
+};
+
+const hideConnectionFailedModal = () => {
+    domElements.connectionFailedModal.classList.remove('show');
+};
+
+const toggleSoundElement = () => {
+    domElements.playAudioBtn.classList.toggle('hidden');
+    domElements.pauseAudioBtn.classList.toggle('hidden');
+};
+
+const showPauseButton = () => {
+    domElements.playAudioBtn.classList.add('hidden');
+    domElements.pauseAudioBtn.classList.remove('hidden');
+};
+
+const showPlayButton = () => {
+    domElements.playAudioBtn.classList.remove('hidden');
+    domElements.pauseAudioBtn.classList.add('hidden');
+};
+
 export {
-    showLoadingScreen, printPlayerInputs, printWordList, printPlayerStatus, showGameAreaHandler, showGameResultArea, handleDisabledButtonClass, resetGameElements, printTimeLeft, showDefinition, hideDefinition
+    showLoadingScreen, printPlayerInputs, printWordList, printPlayerStatus, showGameAreaHandler, showGameResultArea, handleDisabledButtonClass, resetGameElements, printTimeLeft, showDefinition, hideDefinition, showConnectionFailedModal, hideConnectionFailedModal, toggleSoundElement, showPauseButton, showPlayButton, markCorrectWords
 }

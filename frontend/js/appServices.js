@@ -1,4 +1,7 @@
+import * as render from './render.js';
+
 const SERVER_URL = 'https://abcort.onrender.com';
+//http://localhost:7000
 
 const getWordsList = async gameDifficulty => {
     try {
@@ -16,20 +19,22 @@ const getWordsList = async gameDifficulty => {
             return await response.json();
         };
         
-        //Handle not ok response
+        render.showConnectionFailedModal();
     } catch (error) {
-        //Handle not ok response
         console.error(error);
+
+        render.showConnectionFailedModal();
     };
 };
 
 const getDefinitionsList = async wordsList => {
+
     const wordsDefinitionsList = new Array();
 
-
-    wordsList.forEach(async word => {
+    for (let i = 0; i < wordsList.length; i++) {
         try {
-            const response = await fetch(`https://freedictionaryapi.com/api/v1/entries/en/${word.toLowerCase()}`);
+            const response = await fetch(`https://freedictionaryapi.com/api/v1/entries/en/${wordsList[i].toLowerCase()}`);
+
         
             const data = await response.json();
 
@@ -41,7 +46,7 @@ const getDefinitionsList = async wordsList => {
         } catch (error) {
             console.error(error);
         };
-    });
+    }
 
     return wordsDefinitionsList;
 }
@@ -64,11 +69,12 @@ const getResult = async (playerWordsList, playerStatus, currentGameState) => {
             return await response.json();
         };
 
-        //Handle not ok response
-        
+
+        render.showConnectionFailedModal();
     } catch (error) {
+        render.showConnectionFailedModal();
+
         console.error(error);
-        //Handle not ok response
     }
 };
 

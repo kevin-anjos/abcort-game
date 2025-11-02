@@ -1,6 +1,7 @@
 import * as appServices from './appServices.js';
 import * as domElements from './domElements.js';
 import * as render from './render.js';
+import * as audio from './audio.js';
 
 const finishGameButtonState = {
     disabled: true
@@ -31,9 +32,9 @@ const setPlayerStatus = () => {
 
 let currentPlayerStatus = setPlayerStatus();
 
-console.log(currentPlayerStatus)
-
 let countdown;
+
+let currentWordsList;
 
 let currentWordsDefinitions;
 
@@ -62,12 +63,36 @@ const checkInputValues = () => {
     render.handleDisabledButtonClass(finishGameButtonState.disabled);
 };
 
+const markWordsHandler = () => {
+    const playerInputsValues = getPlayerInputsValues();
+
+    const toBeMarkedWordsPositions = new Array();
+
+    //Check if any word list input and play input word match
+
+    //if it does match, save the position in the variable and render the marked word
+
+    currentWordsList.forEach((word, index) => {
+        playerInputsValues.forEach(inputWord => {
+            if (word.toLowerCase() === inputWord.toLowerCase()) {
+                toBeMarkedWordsPositions.push(index);
+            };
+        });
+    });
+
+    render.markCorrectWords(toBeMarkedWordsPositions);
+};
+
 const goHome = () => {
     clearInterval(countdown);
+    audio.pauseAudios();
+    render.showPlayButton();
     render.showGameAreaHandler("start-game-area");
 }
 
 const startGame = async () => {
+
+    audio.pauseAudios();
 
     clearInterval(countdown);
 
@@ -79,6 +104,8 @@ const startGame = async () => {
 
     currentGameState = gameState;
 
+    currentWordsList = wordsList;
+
     render.printWordList(wordsList);
 
     render.printPlayerInputs(wordsList);
@@ -88,6 +115,10 @@ const startGame = async () => {
     const timeLeft = setGameDificulty();
 
     printTimeLeftHandler(timeLeft);
+
+    audio.playCountdownSound();
+
+    render.showPauseButton();
 
     //Game started
 
@@ -106,6 +137,8 @@ const finishGame = async ({ defeatByTimeout }) => {
 
     if (finishGameButtonState.disabled && !defeatByTimeout) return;
 
+    audio.pauseAudios();
+
     render.showLoadingScreen();
 
     const playerInputsValues = getPlayerInputsValues();
@@ -116,18 +149,23 @@ const finishGame = async ({ defeatByTimeout }) => {
 
     if (cheated) {
         render.showGameAreaHandler("player-cheated-area");
+        audio.playLoserSound();
     } else {
 
         if (defeatByTimeout || !playerResult.won) {
             render.showGameResultArea({ defeat: true });
+            audio.playDefeatSound();
         } 
         
         if (!defeatByTimeout && playerResult.won) {
             render.showGameResultArea({ defeat: false });
+            audio.playWinSound();
         };
 
         render.showGameAreaHandler("result-game-area");
     }
+
+    render.showPlayButton();
 
     updatePlayerStatus();
 
@@ -136,7 +174,7 @@ const finishGame = async ({ defeatByTimeout }) => {
     finishGameButtonState.disabled = true;
 
     console.log(currentPlayerStatus);
-    
+
     render.printPlayerStatus(currentPlayerStatus);
 
     render.handleDisabledButtonClass(finishGameButtonState.disabled);
@@ -188,5 +226,5 @@ const getPlayerStatus = () => currentPlayerStatus;
 updatePlayerStatus();
 
 export {
-    startGame, goHome, finishGame, checkInputValues, setGameDificulty, getPlayerStatus, showDefinitionHandler
+    startGame, goHome, finishGame, checkInputValues, setGameDificulty, getPlayerStatus, showDefinitionHandler, markWordsHandler
 };
