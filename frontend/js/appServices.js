@@ -1,7 +1,9 @@
 import * as render from './render.js';
 
-const SERVER_URL = 'https://abcort.onrender.com';
-//http://localhost:7000
+const SERVER_URL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:7000'
+    : 'https://abcort.onrender.com';
 
 const getWordsList = async gameDifficulty => {
     try {
@@ -14,6 +16,8 @@ const getWordsList = async gameDifficulty => {
                 gameDifficulty
             })
         });
+
+        console.log(response.status);
 
         if (response.ok) {
             return await response.json();
@@ -34,7 +38,6 @@ const getDefinitionsList = async wordsList => {
     for (let i = 0; i < wordsList.length; i++) {
         try {
             const response = await fetch(`https://freedictionaryapi.com/api/v1/entries/en/${wordsList[i].toLowerCase()}`);
-
         
             const data = await response.json();
 
@@ -61,7 +64,7 @@ const getResult = async (playerWordsList, playerStatus, currentGameState) => {
             body: JSON.stringify({
                 playerWordsList,
                 playerStatus,
-                currentGameState
+                gameState: currentGameState
             })
         });
 

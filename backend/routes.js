@@ -1,5 +1,6 @@
 import express from 'express';
 import * as objectTables from './objectTables.js';
+import * as words from './words.js';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
@@ -14,50 +15,45 @@ router.post('/start', async(req, res) => {
 
     const letter = objectTables.letterPerIndex[randomIndex];
 
-    try {
+    const { wordsList, error } = await words.getWordsList({wordsAmount, letter});
 
-        const response = await fetch(`https://random-word-api.vercel.app/api?words=${wordsAmount}&letter=${letter.toLowerCase()}&type=capitalized`);
-
-        const wordsList = await response.json();
-
-        const gameTimeInMilliseconds = objectTables.timePerDifficultyInMilliseconds[gameDifficulty];
-
-        //Pass the game state to the front-end;
-
-        const gameState = jwt.sign(
-            {
-                gameDifficulty: gameDifficulty,
-                wordsList: wordsList,
-                gameStartedTime: Date.now()
-
-            }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: `${(gameTimeInMilliseconds / 1000) + 5}s` }
-        )
-        
-        res.status(200).json({
-            wordsList: wordsList,
-            gameState: gameState,
-        });
-
-
-    } catch (error) {
+    if (error) {
         console.error(error);
-        res.status(500);
+        return res.status(500).json("Server error");
     };
+
+    const gameTimeInMilliseconds = objectTables.timePerDifficultyInMilliseconds[gameDifficulty];
+
+    //Pass the game state to the front-end;
+
+    const gameState = jwt.sign(
+        {
+            gameDifficulty: gameDifficulty,
+            wordsList: wordsList,
+            gameStartedTime: Date.now()
+
+        }, 
+        process.env.JWT_SECRET, 
+        { expiresIn: `${(gameTimeInMilliseconds / 1000) + 5}s` }
+    );
     
+    res.status(200).json({
+        wordsList: wordsList,
+        gameState: gameState,
+    });
+
 });
 
 router.post('/result', async(req, res) => {
 
-    const { playerWordsList, playerStatus, currentGameState } = req.body;
+    const { playerWordsList, playerStatus, gameState } = req.body;
 
-    if (!currentGameState) {
+    if (!gameState) {
         return res.status(400).json("The state of the game was not disclosed.");
     };
 
     try {
-        const { gameDifficulty, wordsList, gameStartedTime } = jwt.verify(currentGameState, process.env.JWT_SECRET);
+        const { gameDifficulty, wordsList, gameStartedTime } = jwt.verify(gameState, process.env.JWT_SECRET);
 
         //The game state is valid
 

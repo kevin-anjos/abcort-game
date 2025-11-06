@@ -8,26 +8,41 @@ const finishGameButtonState = {
 };
 
 const setPlayerStatus = () => {
+    try {
 
-    const playerStatus = JSON.parse(localStorage.getItem("playerStatus"));
+        const storedPlayerStatus = JSON.parse(localStorage.getItem("playerStatus"));
 
-    if (!playerStatus) return {
+        const playerStatus = verifyStoredPlayerStatus(storedPlayerStatus);
+
+        return playerStatus;
+
+    } catch (error) {
+        console.error(error)
+        return {
+            "wins": 0,
+            "defeats": 0,
+        }
+    }
+};
+
+const verifyStoredPlayerStatus = storedPlayerStatus => {
+
+    if (!storedPlayerStatus) return {
         "wins": 0,
         "defeats": 0,
     }
 
-    if (playerStatus.wins === null || playerStatus.defeats === null) return {
+    if (storedPlayerStatus.wins === null || storedPlayerStatus.defeats === null) return {
         "wins": 0,
         "defeats": 0,
     }
 
-    if (isNaN(Number(playerStatus.wins)) || isNaN(Number(playerStatus.defeats))) return {
+    if (isNaN(Number(storedPlayerStatus.wins)) || isNaN(Number(storedPlayerStatus.defeats))) return {
         "wins": 0,
         "defeats": 0,
     }
 
-    return playerStatus;
-
+    return storedPlayerStatus;
 };
 
 let currentPlayerStatus = setPlayerStatus();
