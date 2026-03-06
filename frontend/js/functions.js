@@ -141,7 +141,7 @@ const printTimeLeftHandler = (timeIterator) => {
     countdown = setInterval(() => {
         if (timeIterator === 1) {
             clearInterval(countdown);
-            finishGame({ defeatByTimeout: true });
+            game.finishGame({ defeatByTimeout: true });
         };
 
         timeIterator--;
