@@ -8,6 +8,9 @@ const columns = 100; //width
 const rows = 40; //height
 
 const startFire = () => {
+
+    if (screen.width > 520) return;
+
     createFireDataStructure();
     createFireSource();
 

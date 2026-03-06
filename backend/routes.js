@@ -11,11 +11,11 @@ router.post('/start', async(req, res) => {
     
     const wordsAmount = objectTables.wordsAmountPerDifficulty[gameDifficulty];
 
-    const randomIndex = Math.floor(Math.random() * 25);
+    // const randomIndex = Math.floor(Math.random() * 25);
 
-    const letter = objectTables.letterPerIndex[randomIndex];
+    // const letter = objectTables.letterPerIndex[randomIndex];
 
-    const { wordsList, error } = await words.getWordsList({wordsAmount, letter});
+    const { wordsList, error } = await words.getWordsList({ wordsAmount });
 
     if (error) {
         console.error(error);
@@ -44,7 +44,7 @@ router.post('/start', async(req, res) => {
 
 });
 
-router.post('/result', async(req, res) => {
+router.post('/finish', async(req, res) => {
 
     const { playerWordsList, playerStatus, gameState } = req.body;
 
@@ -71,7 +71,8 @@ router.post('/result', async(req, res) => {
                 playerResult: {
                     won: false
                 },
-                playerStatus
+                playerStatus,
+                correctWordsList: wordsList.sort()
             });
 
         } 
@@ -90,7 +91,8 @@ router.post('/result', async(req, res) => {
                 playerResult: {
                     won: false
                 },
-                playerStatus
+                playerStatus,
+                correctWordsList: wordsList.sort()
             });
         };
 

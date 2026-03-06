@@ -2,6 +2,7 @@ import * as appServices from './appServices.js';
 import * as domElements from './domElements.js';
 import * as render from './render.js';
 import * as audio from './audio.js';
+import * as game from './game.js';
 
 const finishGameButtonState = {
     disabled: true
@@ -9,7 +10,6 @@ const finishGameButtonState = {
 
 const setPlayerStatus = () => {
     try {
-
         const storedPlayerStatus = JSON.parse(localStorage.getItem("playerStatus"));
 
         const playerStatus = verifyStoredPlayerStatus(storedPlayerStatus);
@@ -17,43 +17,23 @@ const setPlayerStatus = () => {
         return playerStatus;
 
     } catch (error) {
-        console.error(error)
         return {
             "wins": 0,
             "defeats": 0,
-        }
-    }
+        };
+    };
 };
 
+let countdown;
+
 const verifyStoredPlayerStatus = storedPlayerStatus => {
-
-    if (!storedPlayerStatus) return {
-        "wins": 0,
-        "defeats": 0,
-    }
-
-    if (storedPlayerStatus.wins === null || storedPlayerStatus.defeats === null) return {
-        "wins": 0,
-        "defeats": 0,
-    }
-
-    if (isNaN(Number(storedPlayerStatus.wins)) || isNaN(Number(storedPlayerStatus.defeats))) return {
+    if (isNaN(Number(storedPlayerStatus?.wins)) || isNaN(Number(storedPlayerStatus?.defeats))) return {
         "wins": 0,
         "defeats": 0,
     }
 
     return storedPlayerStatus;
 };
-
-let currentPlayerStatus = setPlayerStatus();
-
-let countdown;
-
-let currentWordsList;
-
-let currentWordsDefinitions;
-
-let currentGameState;
 
 const getPlayerInputsValues = () => {
     const playerInputsValues = [];
@@ -68,8 +48,8 @@ const getPlayerInputsValues = () => {
 const checkInputValues = () => {
     const playerInputsValues = getPlayerInputsValues();
 
-    //Checks if all inputs values are different than an empty string
-    if (playerInputsValues.every(input => input.trim() !== "")) {
+    //Checks if all inputs values exists (are different than an empty string)
+    if (playerInputsValues.every(input => input.trim())) {
         finishGameButtonState.disabled = false;
     } else {
         finishGameButtonState.disabled = true;
@@ -79,20 +59,20 @@ const checkInputValues = () => {
 };
 
 const markWordsHandler = () => {
-    const playerInputsValues = getPlayerInputsValues();
+    const playerInputsValues = getPlayerInputsValues().map(word => word.toLowerCase());
 
     const toBeMarkedWordsPositions = new Array();
+
+    const { wordsList } = game.getCurrentGame();
 
     //Check if any word list input and play input word match
 
     //if it does match, save the position in the variable and render the marked word
 
-    currentWordsList.forEach((word, index) => {
-        playerInputsValues.forEach(inputWord => {
-            if (word.toLowerCase() === inputWord.toLowerCase()) {
-                toBeMarkedWordsPositions.push(index);
-            };
-        });
+    wordsList.forEach((word, index) => {
+        if (playerInputsValues.includes(word.toLowerCase())) {
+            toBeMarkedWordsPositions.push(index);
+        };
     });
 
     render.markCorrectWords(toBeMarkedWordsPositions);
@@ -105,80 +85,39 @@ const goHome = () => {
     render.showGameAreaHandler("start-game-area");
 }
 
-const startGame = async () => {
-
-    audio.pauseAudios();
-
-    clearInterval(countdown);
-
-    render.showLoadingScreen();
-
-    render.resetGameElements();
-
-    const { wordsList, gameState } = await appServices.getWordsList(domElements.gameDifficultySelect.value);
-
-    currentGameState = gameState;
-
-    currentWordsList = wordsList;
-
-    render.printWordList(wordsList);
-
-    render.printPlayerInputs(wordsList);
-    
-    render.showGameAreaHandler("play-game-area");
-
-    const timeLeft = setGameDificulty();
-
-    printTimeLeftHandler(timeLeft);
-
-    audio.playCountdownSound();
-
-    render.showPauseButton();
-
-    //Game started
-
-    //Get words definition list after the game starts
-
-    const wordsDefinitions = await appServices.getDefinitionsList(wordsList);
-
-    currentWordsDefinitions = wordsDefinitions;
-}
 
 const updatePlayerStatus = () => {
-    localStorage.setItem("playerStatus", JSON.stringify(currentPlayerStatus));
-}
+    const { playerStatus } = game.getCurrentGame();
 
-const finishGame = async ({ defeatByTimeout }) => {
+    localStorage.setItem("playerStatus", JSON.stringify(playerStatus));
+};
 
-    if (finishGameButtonState.disabled && !defeatByTimeout) return;
-
-    audio.pauseAudios();
-
-    render.showLoadingScreen();
-
-    const playerInputsValues = getPlayerInputsValues();
-
-    const { playerResult, playerStatus, cheated } = await appServices.getResult(playerInputsValues, currentPlayerStatus, currentGameState);
-
-    currentPlayerStatus = playerStatus;
+const showGameResult = async ({ cheated, defeatByTimeout, playerResult, correctWordsList }) => {
 
     if (cheated) {
         render.showGameAreaHandler("player-cheated-area");
         audio.playLoserSound();
-    } else {
+        return;
+    };
 
-        if (defeatByTimeout || !playerResult.won) {
-            render.showGameResultArea({ defeat: true });
-            audio.playDefeatSound();
-        } 
-        
-        if (!defeatByTimeout && playerResult.won) {
-            render.showGameResultArea({ defeat: false });
-            audio.playWinSound();
-        };
+    if (defeatByTimeout || !playerResult.won) {
+        render.showGameResultArea({ defeat: true });
+        render.printCorrectWordsList({ correctWordsList });
+        audio.playDefeatSound();
+    } 
+    
+    if (!defeatByTimeout && playerResult.won) {
+        render.showGameResultArea({ defeat: false });
+        audio.playWinSound();
+    };
 
-        render.showGameAreaHandler("result-game-area");
-    }
+    render.showGameAreaHandler("result-game-area");
+
+};
+
+const resetGame = () => {
+
+    const { playerStatus } = game.getCurrentGame();
 
     render.showPlayButton();
 
@@ -188,13 +127,13 @@ const finishGame = async ({ defeatByTimeout }) => {
 
     finishGameButtonState.disabled = true;
 
-    console.log(currentPlayerStatus);
-
-    render.printPlayerStatus(currentPlayerStatus);
+    render.printPlayerStatus(playerStatus);
 
     render.handleDisabledButtonClass(finishGameButtonState.disabled);
 
-}
+    render.resetGameElements();
+
+};
 
 const printTimeLeftHandler = (timeIterator) => {
     render.printTimeLeft(timeIterator);
@@ -226,20 +165,58 @@ const setGameDificulty = () => {
 
 const showDefinitionHandler = word => {
 
-    if (!currentWordsDefinitions) return;
+    const { wordsDefinitions } = game.getCurrentGame();
+
+    if (!wordsDefinitions) return;
 
     const wordId = word.replace('word-', '');
 
-    const wordDefinition = currentWordsDefinitions[wordId];
+    const wordDefinition = wordsDefinitions[wordId];
 
     render.showDefinition(wordDefinition);
 
 };
 
-const getPlayerStatus = () => currentPlayerStatus;
+const pauseGame = () => {
+    audio.pauseAudios();
+    render.showLoadingScreen();
+};
 
-updatePlayerStatus();
+const getGameResult = async () => {
+
+    const playerWordsList = getPlayerInputsValues();
+
+    const {gameState, playerStatus} = game.getCurrentGame();
+
+    const result = await appServices.finishGame({
+        playerStatus,
+        gameState,
+        playerWordsList
+    });
+
+    game.updateCurrentGame({ 
+        playerStatus: result.playerStatus
+    });
+
+    return result;
+};
+
+const setupGameUI = wordsList => {
+    render.printWordList(wordsList);
+    
+    render.printPlayerInputs(wordsList);
+    
+    render.showGameAreaHandler("play-game-area");
+
+    printTimeLeftHandler(setGameDificulty());
+
+    audio.playCountdownSound();
+
+    render.showPauseButton();
+};
+
+const getFinishGameButtonState = () => finishGameButtonState
 
 export {
-    startGame, goHome, finishGame, checkInputValues, setGameDificulty, getPlayerStatus, showDefinitionHandler, markWordsHandler
+    goHome, checkInputValues, setGameDificulty, showDefinitionHandler, markWordsHandler, setPlayerStatus, setupGameUI, getGameResult, pauseGame, resetGame, showGameResult, getFinishGameButtonState, getPlayerInputsValues
 };

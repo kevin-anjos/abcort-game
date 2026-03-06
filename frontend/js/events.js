@@ -3,8 +3,9 @@ import * as render from './render.js';
 import * as functions from './functions.js';
 import * as fire from './fire.js';
 import * as audio from './audio.js';
+import * as game from './game.js';
 
-const playerStatus = functions.getPlayerStatus();
+const playerStatus = functions.setPlayerStatus();
 
 render.printPlayerStatus(playerStatus);
 
@@ -15,11 +16,11 @@ document.addEventListener('click', () => {
 });
 
 domElements.startGameBtns.forEach(button => {
-    button.addEventListener('click', () => functions.startGame())
+    button.addEventListener('click', () => game.startGame())
 });
 
 domElements.finishGameBtn.addEventListener('click', () => {
-    functions.finishGame({ defeatByTimeout: false });
+    game.finishGame({ defeatByTimeout: false });
 });
 
 domElements.goHomeBtn.addEventListener('click', () => {

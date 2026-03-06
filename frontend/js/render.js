@@ -16,7 +16,7 @@ const printWordList = (wordsList) => {
 
         wordElement.id = `word-${index}`;
 
-        wordElement.textContent = word;
+        wordElement.textContent = word.charAt(0).toUpperCase() + word.slice(1);
     
         domElements.wordsListArea.appendChild(wordElement);
     });
@@ -33,6 +33,8 @@ const printPlayerInputs = (wordsList) => {
         const wordInput = document.createElement('input');
         wordInput.classList.add('word-input');
 
+        wordInput.id = `input-${index + 1}`;
+
         wordInputDiv.appendChild(indexParagraph);
         wordInputDiv.appendChild(wordInput);
 
@@ -40,7 +42,7 @@ const printPlayerInputs = (wordsList) => {
     });
 };
 
-const printPlayerStatus = playerStatus => {
+const printPlayerStatus = playerStatus => {    
     domElements.playerWinsSpan.textContent = playerStatus.wins;
 
     domElements.playerDefeatsSpan.textContent = playerStatus.defeats;
@@ -149,6 +151,10 @@ const showGameResultArea = ({ defeat }) => {
 
 };
 
+const printCorrectWordsList = ({ correctWordsList }) => {
+    domElements.correctWordsListParagraph.innerHTML = correctWordsList;
+};
+
 const handleDisabledButtonClass = (isDisabled) => {
     if (isDisabled) {
         return domElements.finishGameBtn.classList.add('disabled');
@@ -160,7 +166,7 @@ const handleDisabledButtonClass = (isDisabled) => {
 const resetGameElements = () => {
     domElements.wordsListArea.replaceChildren();
     domElements.playerInputsWrapper.replaceChildren();
-    domElements.gameTimer.classList.remove('hidden');
+    domElements.gameTimer.classList.add('hidden');
     domElements.startGameBtns.forEach(button => button.innerHTML = '<i class="bi bi-arrow-clockwise"></i> <span>Restart the game</span>')
 }
 
@@ -202,7 +208,9 @@ const hideDefinition = () => {
 };
 
 const showConnectionFailedModal = () => {
+    showStartGameArea();
     domElements.connectionFailedModal.classList.add('show');
+    domElements.loadingScreen.classList.add('hidden');
 };
 
 const hideConnectionFailedModal = () => {
@@ -225,5 +233,5 @@ const showPlayButton = () => {
 };
 
 export {
-    showLoadingScreen, printPlayerInputs, printWordList, printPlayerStatus, showGameAreaHandler, showGameResultArea, handleDisabledButtonClass, resetGameElements, printTimeLeft, showDefinition, hideDefinition, showConnectionFailedModal, hideConnectionFailedModal, toggleSoundElement, showPauseButton, showPlayButton, markCorrectWords
-}
+    showLoadingScreen, printPlayerInputs, printWordList, printPlayerStatus, showGameAreaHandler, showGameResultArea, handleDisabledButtonClass, resetGameElements, printTimeLeft, showDefinition, hideDefinition, showConnectionFailedModal, hideConnectionFailedModal, toggleSoundElement, showPauseButton, showPlayButton, markCorrectWords, printCorrectWordsList
+};

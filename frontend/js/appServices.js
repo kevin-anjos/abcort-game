@@ -5,83 +5,80 @@ const SERVER_URL =
     ? 'http://localhost:7000'
     : 'https://abcort.onrender.com';
 
-const getWordsList = async gameDifficulty => {
-    try {
-        const response = await fetch(`${SERVER_URL}/game/start`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                gameDifficulty
-            })
-        });
-
-        console.log(response.status);
-
-        if (response.ok) {
-            return await response.json();
-        };
-        
-        render.showConnectionFailedModal();
-    } catch (error) {
-        console.error(error);
-
-        render.showConnectionFailedModal();
+const doRequest = async ({ endpoint, method, body }) => {
+    const options = {
+        method,
+        headers: {
+            "Content-Type": "application/json"
+        }
     };
+
+    if (body) options.body = JSON.stringify(body);
+
+    try {
+
+        const response = await fetch(endpoint, options);
+
+        if (!response.ok) return render.showConnectionFailedModal();
+
+        return response;
+
+    } catch (error) {
+        return render.showConnectionFailedModal();
+    };
+};
+
+const startGame = async gameDifficulty => {
+
+    const response = await doRequest({
+        endpoint: `${SERVER_URL}/game/start`,
+        method: "POST",
+        body: {
+            gameDifficulty
+        }
+    });
+
+    return await response.json();
+
 };
 
 const getDefinitionsList = async wordsList => {
 
     const wordsDefinitionsList = new Array();
 
-    for (let i = 0; i < wordsList.length; i++) {
-        try {
-            const response = await fetch(`https://freedictionaryapi.com/api/v1/entries/en/${wordsList[i].toLowerCase()}`);
-        
-            const data = await response.json();
+    for (const word of wordsList) {
 
-            if (data.entries.length === 0) {
-                wordsDefinitionsList.push("No meanings available");
-            } else {
-                wordsDefinitionsList.push(data.entries[0].senses[0].definition);
-            };
-        } catch (error) {
-            console.error(error);
-        };
+        const response = await doRequest({
+            endpoint: `https://freedictionaryapi.com/api/v1/entries/en/${word.toLowerCase()}`,
+            method: "GET"
+        });
+
+        const data = await response.json();
+
+        wordsDefinitionsList.push(data?.entries[0]?.senses[0]?.definition || "No meanings available");
+
     }
 
     return wordsDefinitionsList;
 }
 
-const getResult = async (playerWordsList, playerStatus, currentGameState) => {
-    try {
-        const response = await fetch(`${SERVER_URL}/game/result`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                playerWordsList,
-                playerStatus,
-                gameState: currentGameState
-            })
-        });
+const finishGame = async ({ playerWordsList, playerStatus, gameState }) => {
+    
+    const response = await doRequest({
+        endpoint: `${SERVER_URL}/game/finish`,
+        method: "POST",
+        body: {
+            playerWordsList,
+            playerStatus,
+            gameState
+        }
+    });
 
-        if (response.ok) {
-            return await response.json();
-        };
+    return await response.json();
 
-
-        render.showConnectionFailedModal();
-    } catch (error) {
-        render.showConnectionFailedModal();
-
-        console.error(error);
-    }
 };
 
 
 export {
-    getWordsList, getResult, getDefinitionsList
+    startGame, finishGame, getDefinitionsList
 };

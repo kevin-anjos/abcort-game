@@ -25,6 +25,8 @@ const playerDefeatsSpan = document.querySelector('#player-defeats-span');
 const gameTimer = document.querySelector('#game-timer');
 const timerCountdownSpan = document.querySelector('#timer-countdown-span');
 
+const correctWordsListParagraph = document.querySelector('#correct-words-list');
+
 const gameDifficultyConfiguration = document.querySelector('#game-difficulty-configuration');
 const gameDifficultySelect = document.querySelector('#game-difficulty-select');
 
@@ -45,5 +47,5 @@ const pauseAudioBtn = document.querySelector('#pause-audio-btn');
 const buttons = document.querySelectorAll('button');
 
 export {
-    wordsListArea, finishGameBtn, startGameBtns, playerInputsWrapper, playerResultAreas, startGameArea, gameArea, resultGameArea, loadingScreen, playerDefeatsSpan, playerWinsSpan, gameTimer, timerCountdownSpan, goHomeBtn, gameDifficultyConfiguration, gameDifficultySelect, header, footer, wordDefinitionArea, playerCheatedArea, connectionFailedModal, fireSound, countdownSound, buttonSound, playAudioBtn, pauseAudioBtn, buttons, winSound, defeatSound, loserSound
+    wordsListArea, finishGameBtn, startGameBtns, playerInputsWrapper, playerResultAreas, startGameArea, gameArea, resultGameArea, loadingScreen, playerDefeatsSpan, playerWinsSpan, gameTimer, timerCountdownSpan, goHomeBtn, gameDifficultyConfiguration, gameDifficultySelect, header, footer, wordDefinitionArea, playerCheatedArea, connectionFailedModal, fireSound, countdownSound, buttonSound, playAudioBtn, pauseAudioBtn, buttons, winSound, defeatSound, loserSound, correctWordsListParagraph
 }
